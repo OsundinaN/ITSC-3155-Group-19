@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Leave Us Feedback</h2>
+    <p>We value your feedback! Let us know how we can improve.</p>
+    <form method="POST">
+        {% csrf_token %}
+        <textarea name="feedback" rows="4" cols="50" placeholder="Write your feedback here..."></textarea>
+        <br>
+        <button type="submit" class="btn">Submit</button>
+    </form>
+{% endblock %}

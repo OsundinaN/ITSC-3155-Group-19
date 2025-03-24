@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contract Jobs - The Contractor{% endblock %}
+
+{% block content %}
+
+<!-- 🔹 Search Bar for Jobs -->
+<section class="search-jobs">
+    <h2>Search for Related Jobs</h2>
+    <form action="{% url 'search' %}" method="GET">
+        <input type="text" name="q" placeholder="Enter job title, company, or skills..." required>
+        <button type="submit">Search</button>
+    </form>
+</section>
+
+<!-- 🔹 Job Listings -->
+<section class="job-listings">
+    <h2>Available Contract Jobs</h2>
+    {% for job in jobs %}
+        <div class="job-card">
+            <h3>{{ job.title }} @ {{ job.company }}</h3>
+            <p>📍 {{ job.location }}</p>
+            <p>💰 {{ job.salary }}</p>
+            <p>📅 {{ job.start_date }} - {{ job.end_date }}</p>
+            
+            <!-- Dropdown Details -->
+            <button class="toggle-details" onclick="toggleDetails('job-{{ job.id }}')">View Details</button>
+            <div id="job-{{ job.id }}" class="job-details" style="display: none;">
+                <p><strong>🔹 Description:</strong> {{ job.description }}</p>
+                <p><strong>✅ Skills Needed:</strong> {{ job.skills }}</p>
+
+                <!-- Reviews for this job -->
+                <h4>Reviews for {{ job.company }}</h4>
+                {% for review in job.review_set.all %}
+                    <div class="review">
+                        <p><strong>{{ review.reviewer_name }}</strong> - ⭐ {{ review.rating }}/5</p>
+                        <p>{{ review.review_text }}</p>
+                        <p>📅 {{ review.date }}</p>
+                    </div>
+                {% empty %}
+                    <p>No reviews yet for this job.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</section>
+
+{% endblock %}

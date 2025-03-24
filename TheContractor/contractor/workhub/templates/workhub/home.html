@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Home - The Contractor{% endblock %}
+
+{% block content %}
+
+<!-- 🔹 Original Banner -->
+<section class="banner text-center">
+<img src="{% static 'images/banner.png' %}" class="img-fluid w-100" alt="The Contractor Banner">
+</section>
+
+<!-- 🔹 Hero Section -->
+<header class="masthead text-center text-white bg-primary py-5">
+    <div class="container">
+        <h1 class="masthead-heading">Find Contract Jobs & Kickstart Your Career</h1>
+        <form action="{% url 'search' %}" method="GET" class="d-flex justify-content-center mt-3">
+            <input type="text" name="q" class="form-control w-50" placeholder="Search for jobs or reviews..." required>
+            <button type="submit" class="btn btn-warning ms-2">Search</button>
+        </form>
+    </div>
+</header>
+
+<!-- 🔹 Featured Jobs Section -->
+<section class="container my-5">
+    <h2 class="text-center mb-4">Featured Contract Jobs</h2>
+    <div class="row">
+        {% for job in jobs %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'job_detail' job.id %}" class="text-dark">
+                                {{ job.title }} @ {{ job.company }}
+                            </a>
+                        </h5>
+                        <p class="card-text"><strong>📍 Location:</strong> {{ job.location }}</p>
+                        <p class="card-text"><strong>💰 Salary:</strong> {{ job.salary }}</p>
+                        <p class="card-text"><strong>📅 Duration:</strong> {{ job.start_date }} - {{ job.end_date }}</p>
+                        <p class="card-text"><strong>✅ Skills:</strong> {{ job.skills }}</p>
+                        <a href="{% url 'job_detail' job.id %}" class="btn btn-primary">View Job</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center">No jobs available at the moment.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- 🔹 Reviews Section -->
+<section class="container my-5">
+    <h2 class="text-center mb-4">Popular Reviews</h2>
+    <div class="row">
+        {% for review in reviews %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ review.reviewer_name }} - {{ review.company }}</h6>
+                        <p class="card-text">⭐ {{ review.rating }}/5</p>
+                        <p class="card-text">{{ review.review_text }}</p>
+                        <p class="text-muted"><small>📅 Reviewed on: {{ review.date }}</small></p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center">No reviews available at the moment.</p>
+        {% endfor %}
+    </div>
+    <div class="text-center">
+        <a href="{% url 'reviews' %}" class="btn btn-warning">See More Reviews</a>
+    </div>
+</section>
+
+<!-- 🔹 Call-To-Action -->
+<section class="text-center bg-light py-5">
+    <h3>Ready to Find Your Next Contract Job?</h3>
+    <a href="{% url 'signup' %}" class="btn btn-success">Sign Up</a>
+</section>
+
+{% endblock %}

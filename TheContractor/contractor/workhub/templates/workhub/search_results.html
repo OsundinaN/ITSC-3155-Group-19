@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<h2>Search Results for "{{ query }}"</h2>
+
+<!-- 🔹 Job Search Results -->
+{% if jobs %}
+    <h3>Jobs</h3>
+    {% for job in jobs %}
+        <div class="job-card">
+            <h4>{{ job.title }} at {{ job.company }}</h4>
+            <p>📍 {{ job.location }}</p>
+            <p>💰 {{ job.salary }}</p>
+            <a href="#">View Details</a>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No jobs found.</p>
+{% endif %}
+
+<!-- 🔹 Review Search Results -->
+{% if reviews %}
+    <h3>Reviews</h3>
+    {% for review in reviews %}
+        <div class="review-card">
+            <h4>{{ review.reviewer }} - {{ review.company }}</h4>
+            <p>⭐⭐⭐⭐⭐ ({{ review.rating }}/5)</p>
+            <p><strong>Role:</strong> {{ review.role }}</p>
+            <p>{{ review.review_text }}</p>
+            <p>📅 Reviewed on: {{ review.review_date }}</p>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No reviews found.</p>
+{% endif %}
+{% endblock %}
