@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Review Detail{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <h2>{{ review.reviewer }} - {{ review.company }}</h2>
+    <p><strong>Role:</strong> {{ review.role }}</p>
+    <p><strong>Rating:</strong> ⭐ {{ review.rating }}/5</p>
+    <p><strong>Date:</strong> {{ review.review_date }}</p>
+    <hr>
+    <p>{{ review.review_text }}</p>
+    <a href="{% url 'reviews' %}" class="btn btn-secondary mt-3">Back to Reviews</a>
+</div>
+{% endblock %}

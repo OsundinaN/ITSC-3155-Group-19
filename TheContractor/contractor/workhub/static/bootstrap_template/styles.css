@@ -10,52 +10,8 @@
  * Copyright 2011-2022 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
- /* 🔹 Ensure the Page Uses Full Width */
- body,
- html {
-   width: 100%;
-   height: 100%;
-   margin: 0;
-   padding: 0;
- }
 
- /* 🔹 Full-width Navbar */
- .navbar {
-   width: 100%;
- }
 
- /* 🔹 Ensure Content Fills the Page */
- .container-fluid {
-   width: 100%;
-   padding-left: 0;
-   padding-right: 0;
- }
-
- /* 🔹 Fix Footer to Stick at the Bottom */
- footer {
-   width: 100%;
-   position: relative;
-   bottom: 0;
- }
-
- /* 🔹 Social Media Icons */
- .social-icons {
-   display: flex;
-   gap: 10px;
-   /* Space between icons */
- }
-
- .social-icons img {
-   width: 20px;
-   /* Make icons small */
-   height: 20px;
-   transition: transform 0.2s ease-in-out;
- }
-
- .social-icons img:hover {
-   transform: scale(1.1);
-   /* Slight zoom effect */
- }
  
 :root {
   --bs-blue: #0d6efd;

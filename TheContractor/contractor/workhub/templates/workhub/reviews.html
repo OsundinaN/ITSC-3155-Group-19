@@ -1,26 +1,39 @@
 {% extends "base.html" %}
-{% block title %}Reviews - The Contractor{% endblock %}
+{% load form_tags %}
+
+{% load static %}
+
+{% block title %}Company Reviews - The Contractor{% endblock %}
 
 {% block content %}
-<section class="reviews-section">
-    <h2>Popular Reviews</h2>
-    
-    <div class="review-card">
-        <h3>John D - TechX</h3>
-        <p>⭐⭐⭐⭐☆ (4.5/5)</p>
-        <p><strong>Web Developer</strong></p>
-        <p>"Worked on a 3-month contract with TechX. The work was challenging but rewarding. Payment was on time, and communication was great. Would work with them again!"</p>
-        <p>📅 Reviewed on: Feb 20, 2025</p>
-    </div>
 
-    <div class="review-card">
-        <h3>Sarah K - Innovate Inc.</h3>
-        <p>⭐⭐⭐⭐⭐ (5/5)</p>
-        <p><strong>Data Analyst</strong></p>
-        <p>"Amazing experience! Learned so much from this contract. Highly recommend working with Innovate Inc."</p>
-        <p>📅 Reviewed on: Jan 15, 2025</p>
-    </div>
 
-    <a href="#" class="btn">See More Reviews</a>
+<!-- 🔹 Reviews Section -->
+<section class="container my-5">
+    <h2 class="text-center mb-4">All Company Reviews</h2>
+    <div class="row">
+        {% for review in reviews %}
+        <div class="col-md-6 col-lg-3 mb-4"> <!-- Changed from col-lg-4 to col-lg-3 for 4 per row -->
+            <div class="card shadow h-100">
+                <div class="ratio ratio-16x9">
+                    <img src="{% static 'images/' %}{{ review.company|lower|slugify }}.png"
+                         class="card-img-top object-fit-cover"
+                         style="object-fit: cover;"
+                         alt="{{ review.company }} Logo"
+                         onerror="this.onerror=null;this.src='{% static 'images/default-review.png' %}';">
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ review.reviewer_name }} - {{ review.company }}</h5>
+                    <p class="card-text">⭐ {{ review.rating }}/5</p>
+                    <p class="card-text">{{ review.review_text }}</p>
+                    <p class="text-muted small">📅 {{ review.review_date }}</p>
+                    <a href="{% url 'review_detail' review.id %}" class="btn btn-outline-primary btn-sm mt-auto">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </section>
+
+
 {% endblock %}

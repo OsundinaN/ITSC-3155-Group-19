@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load form_tags %}
 
 {% load static %}
 
@@ -6,10 +7,41 @@
 
 {% block content %}
 
-<!-- 🔹 Original Banner -->
-<section class="banner text-center">
-<img src="{% static 'images/banner.png' %}" class="img-fluid w-100" alt="The Contractor Banner">
-</section>
+<!-- 🔹 Slogan Banner -->
+<header class="masthead text-center text-white position-relative overflow-hidden" style="background-color: #343a40; padding: 6rem 0; width: 100vw;">
+    <div class="container px-5 position-relative z-2">
+        <h1 class="display-4">Start Small, Dream Big</h1>
+        <p class="lead">Contract Jobs for Ambitious Graduates!</p>
+        <a href="{% url 'jobs' %}" class="btn btn-warning btn-lg mt-3">Explore Jobs</a>
+    </div>
+
+    <!-- Now with floating animation! -->
+    <div class="bg-circle bg-primary position-absolute rounded-circle float-circle"
+     style="width: 100px; height: 100px; top: 15%; left: 15%; opacity: 0.80;"></div>
+     
+     <div class="bg-circle bg-primary position-absolute rounded-circle float-circle"
+     style="width: 100px; height: 90px; top: 13%; left: 5%; opacity: 0.80;"></div>
+     
+     <div class="bg-circle bg-info position-absolute rounded-circle float-circle"
+     style="width: 70px; height: 70px; bottom: 30%; left: 30%; opacity: 0.80;"></div>
+
+     <div class="bg-circle bg-info position-absolute rounded-circle float-circle"
+     style="width: 140px; height: 140px; bottom: 5%; left: 8%; opacity: 0.80;"></div>
+
+     <div class="bg-circle bg-warning position-absolute rounded-circle float-circle"
+     style="width: 140px; height: 140px; top: 30%; right: 12%; opacity: 0.80;"></div>
+
+    <div class="bg-circle bg-success position-absolute rounded-circle float-circle"
+     style="width: 90px; height: 90px; bottom: 5%; right: 18%; opacity: 0.80;"></div>
+
+    <div class="bg-circle bg-success position-absolute rounded-circle float-circle"
+     style="width: 90px; height: 90px; bottom: 5%; right: 8%; opacity: 0.80;"></div>
+    
+   
+
+</header>
+
+
 
 <!-- 🔹 Hero Section -->
 <header class="masthead text-center text-white bg-primary py-5">
@@ -21,6 +53,23 @@
         </form>
     </div>
 </header>
+
+<!-- 🔹 Contractor of the Month -->
+{% if contractor %}
+<section class="container my-5 p-4 bg-light border rounded shadow">
+    <h2 class="text-center text-primary mb-4">⭐ Contractor of the Month</h2>
+    <div class="row">
+        <div class="col-md-6 offset-md-3 text-center">
+            <h4>{{ contractor.name }}</h4>
+            <p><strong>Company:</strong> {{ contractor.company }}</p>
+            <p><strong>Role:</strong> {{ contractor.role }}</p>
+            <p><strong>Salary:</strong> {{ contractor.salary }}</p>
+            <p><strong>Duration:</strong> {{ contractor.start_date }} - {{ contractor.end_date }}</p>
+        </div>
+    </div>
+</section>
+{% endif %}
+
 
 <!-- 🔹 Featured Jobs Section -->
 <section class="container my-5">
@@ -52,16 +101,21 @@
 <!-- 🔹 Reviews Section -->
 <section class="container my-5">
     <h2 class="text-center mb-4">Popular Reviews</h2>
-    <div class="row">
+    <div class="row justify-content-center">
         {% for review in reviews %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h6 class="card-title">{{ review.reviewer_name }} - {{ review.company }}</h6>
-                        <p class="card-text">⭐ {{ review.rating }}/5</p>
-                        <p class="card-text">{{ review.review_text }}</p>
-                        <p class="text-muted"><small>📅 Reviewed on: {{ review.date }}</small></p>
-                    </div>
+            <div class="col-md-4 col-lg-3 mb-4 d-flex">
+                <div class="card shadow h-100 w-100 d-flex flex-column">
+                   <a href="{% url 'review_detail' review.id %}" class="text-decoration-none text-dark d-flex flex-column h-100">
+                       <div class="ratio ratio-16x9">
+                           <img src="{% if review.image %}{{ review.image.url }}{% else %}{% static 'images/' %}{{ review.company|lower }}.png{% endif %}" class="card-img-top object-fit-cover" alt="{{ review.company }} Review Image">
+                       </div>
+                       <div class="card-body d-flex flex-column">
+                            <h6 class="card-title">{{ review.reviewer_name }} - {{ review.company }}</h6>
+                            <p class="card-text">⭐ {{ review.rating }}/5</p>
+                            <p class="card-text">{{ review.review_text }}</p>
+                            <p class="text-muted mt-auto"><small>📅 Reviewed on: {{ review.review_date }}</small></p>
+                        </div>
+                    </a>
                 </div>
             </div>
         {% empty %}
@@ -72,6 +126,7 @@
         <a href="{% url 'reviews' %}" class="btn btn-warning">See More Reviews</a>
     </div>
 </section>
+
 
 <!-- 🔹 Call-To-Action -->
 <section class="text-center bg-light py-5">

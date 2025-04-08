@@ -1,27 +1,66 @@
 {% extends "base.html" %}
+{% load form_tags %}
+{% block title %}Login - The Contractor{% endblock %}
 {% block content %}
-<div class="form-container">
-    <h2>Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        
-        <label for="username">Username</label>
-        <input type="text" name="username" placeholder="Username" required>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Password" required>
-        
-        <input type="checkbox" id="togglePassword"> Show Password
+ <!-- 🔔 Combined Login Prompt + Messages -->
+{% if not user.is_authenticated %}
+  <div class="alert alert-warning text-center mb-0" role="alert">
+    Please <a href="{% url 'login' %}">log in</a> to leave a review or access full features.
+  </div>
+{% endif %}
 
-        <button type="submit" class="btn">Login</button>
-    </form>
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
 
-    <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+        <h2 class="text-center mb-4">Login</h2>
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    Invalid username or password. Please try again.
+                </div>
+            {% endif %}
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" required>
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="checkbox" id="togglePassword" class="form-check-input">
+                <label class="form-check-label" for="togglePassword">Show Password</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <p class="mt-3 text-center">
+            Don't have an account?
+            <a href="{% url 'signup' %}">Sign up here</a>
+        </p>
+    </div>
 </div>
 
 <script>
     document.getElementById("togglePassword").addEventListener("change", function () {
-        let passwordField = document.getElementById("password");
+        const passwordField = document.getElementById("password");
         passwordField.type = this.checked ? "text" : "password";
     });
 </script>

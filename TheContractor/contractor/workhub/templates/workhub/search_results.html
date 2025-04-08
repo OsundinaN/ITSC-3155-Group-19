@@ -1,37 +1,77 @@
 {% extends "base.html" %}
-{% block title %}Search Results{% endblock %}
+{% load static %}
+
+{% block title %}Contract Jobs - The Contractor{% endblock %}
 
 {% block content %}
-<h2>Search Results for "{{ query }}"</h2>
 
-<!-- 🔹 Job Search Results -->
-{% if jobs %}
-    <h3>Jobs</h3>
-    {% for job in jobs %}
-        <div class="job-card">
-            <h4>{{ job.title }} at {{ job.company }}</h4>
-            <p>📍 {{ job.location }}</p>
-            <p>💰 {{ job.salary }}</p>
-            <a href="#">View Details</a>
+<!-- 🔹 Search Bar for Jobs -->
+<section class="container my-5">
+    <h2 class="text-center mb-4">Search for Contract Jobs</h2>
+    <form action="{% url 'search' %}" method="GET" class="d-flex justify-content-center">
+        <input type="text" name="q" class="form-control w-50 me-2" placeholder="Enter job title, company, or skills..." required>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</section>
+
+<!-- 🔹 Job Listings -->
+<section class="container my-5">
+    <h2 class="text-center mb-4">Available Contract Jobs</h2>
+    <div class="row">
+        {% for job in jobs %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/' %}{{ job.company|lower|slugify }}.png" class="card-img-top object-fit-cover" style="height: 180px; object-fit: contain;" alt="{{ job.company }} Logo" onerror="this.onerror=null;this.src='{% static 'images/default-job.png' %}';">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ job.title }} @ {{ job.company }}</h5>
+                    <p class="card-text">📍 {{ job.location }}</p>
+                    <p class="card-text">💰 {{ job.salary }}</p>
+                    <p class="card-text">📅 {{ job.start_date }} - {{ job.end_date }}</p>
+                    <button class="btn btn-sm btn-outline-primary mt-auto" data-bs-toggle="collapse" data-bs-target="#details-{{ job.id }}">View Details</button>
+                    <div class="collapse mt-3" id="details-{{ job.id }}">
+                        <p><strong>Description:</strong> {{ job.description }}</p>
+                        <p><strong>Skills:</strong> {{ job.skills }}</p>
+                        <h6 class="mt-3">Reviews for {{ job.company }}</h6>
+                        {% for review in job.review_set.all %}
+                            <div class="border-top pt-2">
+                                <p class="mb-1"><strong>{{ review.reviewer_name }}</strong> - ⭐ {{ review.rating }}/5</p>
+                                <p class="mb-1">{{ review.review_text }}</p>
+                                <p class="text-muted small">📅 {{ review.date }}</p>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No reviews yet for this job.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
-    {% endfor %}
-{% else %}
-    <p>No jobs found.</p>
-{% endif %}
+        {% endfor %}
+    </div>
+</section>
 
-<!-- 🔹 Review Search Results -->
+<!-- 🔹 Matching Reviews -->
 {% if reviews %}
-    <h3>Reviews</h3>
-    {% for review in reviews %}
-        <div class="review-card">
-            <h4>{{ review.reviewer }} - {{ review.company }}</h4>
-            <p>⭐⭐⭐⭐⭐ ({{ review.rating }}/5)</p>
-            <p><strong>Role:</strong> {{ review.role }}</p>
-            <p>{{ review.review_text }}</p>
-            <p>📅 Reviewed on: {{ review.review_date }}</p>
+<section class="container my-5">
+    <h2 class="text-center mb-4">Reviews Matching "{{ query }}"</h2>
+    <div class="row">
+        {% for review in reviews %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="ratio ratio-16x9">
+                    <img src="{% static 'images/' %}{{ review.company|lower|slugify }}.png" class="card-img-top object-fit-cover" style="object-fit: cover;" alt="{{ review.company }} Logo" onerror="this.onerror=null;this.src='{% static 'images/default-review.png' %}';">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ review.reviewer_name }} - {{ review.company }}</h5>
+                    <p class="card-text">⭐ {{ review.rating }}/5</p>
+                    <p class="card-text">{{ review.review_text }}</p>
+                    <p class="text-muted small">📅 {{ review.review_date }}</p>
+                    <a href="{% url 'review_detail' review.id %}" class="btn btn-outline-primary btn-sm mt-2">Read More</a>
+                </div>
+            </div>
         </div>
-    {% endfor %}
-{% else %}
-    <p>No reviews found.</p>
+        {% endfor %}
+    </div>
+</section>
 {% endif %}
+
 {% endblock %}

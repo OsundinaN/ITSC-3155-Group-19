@@ -1,2 +1,8 @@
+{% load form_tags %}
+
 <h2>Logged Out</h2>
 <a href="{% url 'login' %}">Login Again</a>
+<form action="{% url 'logout' %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-warning text-dark">Logout</button>
+</form>
