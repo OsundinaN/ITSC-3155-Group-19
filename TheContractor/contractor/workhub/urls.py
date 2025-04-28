@@ -21,10 +21,13 @@ urlpatterns = [
     path("reviews/<int:pk>/", views.review_detail, name="review_detail"),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('logout/', views.custom_logout, name='logout'),
-    
-    
+    path('jobs/<int:job_id>/apply/', views.apply_for_job, name='apply_for_job'),
+    path('dashboard/', views.dashboard, name='dashboard'),  # <--- change to dashboard
+    path('upload-documents/', views.upload_documents, name='upload_documents'),  # for document upload
+
 
 ]
+    
 
 # ✅serve static files in DEBUG mode
 if settings.DEBUG:

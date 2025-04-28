@@ -88,7 +88,11 @@
                         <p class="card-text"><strong>💰 Salary:</strong> {{ job.salary }}</p>
                         <p class="card-text"><strong>📅 Duration:</strong> {{ job.start_date }} - {{ job.end_date }}</p>
                         <p class="card-text"><strong>✅ Skills:</strong> {{ job.skills }}</p>
-                        <a href="{% url 'job_detail' job.id %}" class="btn btn-primary">View Job</a>
+                        <div class="d-flex gap-2 mt-3">
+    <a href="{% url 'job_detail' job.id %}" class="btn btn-primary w-50">View Job</a>
+    <a href="{% url 'apply_for_job' job.id %}" class="btn btn-success w-50">Apply Now</a>
+</div>
+
                     </div>
                 </div>
             </div>

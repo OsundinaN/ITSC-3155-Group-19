@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+{% load form_tags %}
+
+
+{% block title %}Apply for {{ job.title }} - The Contractor{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <div class="row g-4">
+        <!-- LEFT: Job Details -->
+<div class="col-md-5">
+    <div class="card shadow-sm h-100">
+        <img src="{% static 'images/' %}{{ job.company|lower|slugify }}.png"
+             onerror="this.onerror=null;this.src='{% static 'images/default-job.png' %}'"
+             class="card-img-top" alt="{{ job.company }} logo">
+
+        <div class="card-body">
+            <h4 class="mb-3">{{ job.title }}</h4>
+
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item"><strong>🏢 Company:</strong> {{ job.company }}</li>
+                <li class="list-group-item"><strong>📍 Location:</strong> {{ job.location }}</li>
+                <li class="list-group-item"><strong>💰 Salary:</strong> {{ job.salary }}</li>
+                <li class="list-group-item"><strong>📅 Contract:</strong> {{ job.start_date }} → {{ job.end_date }}</li>
+            </ul>
+
+            <h5 class="text-primary">📝 About the Job:</h5>
+            <p class="small">{{ job.description|default:"No description provided."|linebreaksbr }}</p>
+
+            <h5 class="text-primary mt-4">✅ Required Skills:</h5>
+            <ul class="small">
+          {% for skill in job.skills|split_by_comma %}
+    <li>{{ skill }}</li>
+{% empty %}
+    <li>No specific skills listed.</li>
+{% endfor %}
+
+            </ul>
+
+            <h5 class="text-primary mt-4">🔗 Company Contact:</h5>
+            <p class="small mb-1">
+                <strong>Email:</strong> <a href="mailto:hr@{{ job.company|slugify }}.com">hr@{{ job.company|slugify }}.com</a>
+            </p>
+            <p class="small mb-3">
+                <strong>Website:</strong> <a href="https://{{ job.company|slugify }}.com" target="_blank">Visit Employer Site</a>
+            </p>
+
+            <h5 class="text-primary mt-4">🧩 Other Benefits:</h5>
+            <ul class="small">
+                <li>✔ Health Insurance</li>
+                <li>✔ Paid Time Off</li>
+                <li>✔ Remote Options (if applicable)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <!-- RIGHT: Application Form -->
+        <div class="col-md-7">
+            <div class="card shadow-sm p-4">
+                <h4 class="mb-4 text-primary">Submit Your Application</h4>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- 1. Personal Info -->
+                    <div class="mb-3"><label>Full Name</label><input name="full_name" class="form-control" required></div>
+                    <div class="mb-3"><label>Email</label><input type="email" name="email" class="form-control" required></div>
+                    <div class="mb-3"><label>Phone</label><input name="phone" class="form-control" required></div>
+                    <div class="mb-3"><label>Location</label><input name="location" class="form-control" placeholder="City, State, ZIP"></div>
+                    <div class="mb-3"><label>LinkedIn</label><input name="linkedin" class="form-control" placeholder="https://linkedin.com/in/yourname"></div>
+
+                    <!-- 2. Work Authorization -->
+                    <div class="mb-3">
+                        <label>Authorized to work in the U.S.?</label>
+                        <select name="authorized" class="form-select"><option>Yes</option><option>No</option></select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Need visa sponsorship now or in the future?</label>
+                        <select name="sponsorship" class="form-select"><option>No</option><option>Yes</option></select>
+                    </div>
+
+                    <!-- 3. Resume & Cover Letter -->
+                    <div class="mb-3"><label>Upload Resume</label><input type="file" name="resume" class="form-control" accept=".pdf,.doc,.docx" required></div>
+                    <div class="mb-3">
+                        <label>Cover Letter (Max 1000 chars)</label>
+                        <textarea name="cover_letter" class="form-control" maxlength="1000" rows="5" placeholder="Introduce yourself and express interest..."></textarea>
+                    </div>
+
+                    <!-- 4. Experience -->
+                    <div class="mb-3"><label>Current/Last Job Title</label><input name="experience_title" class="form-control"></div>
+                    <div class="mb-3"><label>Company Name</label><input name="experience_company" class="form-control"></div>
+                    <div class="mb-3"><label>Key Responsibilities</label><textarea name="experience_details" class="form-control" rows="3"></textarea></div>
+
+                    <!-- 5. Education -->
+                    <div class="mb-3"><label>Highest Degree Earned</label><input name="degree" class="form-control"></div>
+                    <div class="mb-3"><label>School/University</label><input name="school" class="form-control"></div>
+                    <div class="mb-3"><label>Field of Study</label><input name="field" class="form-control"></div>
+                    <div class="mb-3"><label>Graduation Year</label><input name="grad_year" class="form-control" type="number"></div>
+
+                    <!-- 6. Additional -->
+                    <div class="mb-3"><label>When can you start?</label><input name="availability" class="form-control"></div>
+                    <div class="mb-3"><label>Willing to relocate?</label>
+                        <select name="relocate" class="form-select"><option>Yes</option><option>No</option><option>Maybe</option></select>
+                    </div>
+                    <div class="mb-3"><label>Desired Salary</label><input name="salary" class="form-control"></div>
+                    <div class="mb-3"><label>Certifications (if any)</label><input name="certifications" class="form-control"></div>
+
+                    <!-- 7. Consent -->
+                    <div class="form-check mb-3">
+                        <input type="checkbox" name="consent_emails" class="form-check-input" required>
+                        <label class="form-check-label">I consent to being contacted about this job.</label>
+                    </div>
+                    <div class="form-check mb-4">
+                        <input type="checkbox" name="confirm_truth" class="form-check-input" required>
+                        <label class="form-check-label">I confirm all information provided is accurate.</label>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'jobs' %}" class="btn btn-outline-secondary">← Back to Jobs</a>
+                        <button type="submit" class="btn btn-success">Submit Application</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

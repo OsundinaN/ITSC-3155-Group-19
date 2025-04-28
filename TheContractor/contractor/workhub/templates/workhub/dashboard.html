@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+    <h2 class="text-center mb-4">👤 Welcome, {{ user.username }}!</h2>
+
+    <!-- Document Upload -->
+    <div class="card mb-4 shadow-sm p-4">
+        <h5 class="text-primary">📑 Upload Documents</h5>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'upload_documents' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="resume" class="form-label">Resume</label>
+                <input type="file" name="resume" class="form-control" id="resume">
+            </div>
+            <div class="mb-3">
+                <label for="certification" class="form-label">Certification</label>
+                <input type="file" name="certification" class="form-control" id="certification">
+            </div>
+            <div class="mb-3">
+                <label for="other" class="form-label">Other Document</label>
+                <input type="file" name="other_document" class="form-control" id="other">
+            </div>
+            <button type="submit" class="btn btn-success">Upload</button>
+        </form>
+    </div>
+
+    <!-- Applications, Reviews, Contracts -->
+    <div class="row g-4">
+
+      <!-- 📄 My Applications -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+       <h5 class="text-primary mb-3">📄 My Applications</h5>
+{% if applications %}
+<ul class="list-group">
+    {% for app in applications %}
+        <li class="list-group-item">
+            <strong>{{ app.job.title }}</strong> at {{ app.job.company }}<br>
+            <small>Applied: {{ app.submitted_at|date:"M d, Y" }}</small>
+        </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="text-muted">No applications yet.</p>
+{% endif %}
+
+    </div>
+</div>
+
+<!-- ⭐ My Reviews -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <h5 class="text-primary mb-3">⭐ My Reviews</h5>
+        {% if reviews %}
+            <ul class="list-group">
+                {% for review in reviews %}
+                    <li class="list-group-item">
+                        <strong>{{ review.company }}</strong> - ⭐ {{ review.rating }}/5<br>
+                        <small>Reviewed on: {{ review.review_date|date:"M d, Y" }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">No reviews yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 🛠️ My Contracts -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <h5 class="text-primary mb-3">🛠️ My Contracts</h5>
+        {% if contracts %}
+            <ul class="list-group">
+                {% for contract in contracts %}
+                    <li class="list-group-item">
+                        <strong>{{ contract.company }}</strong> — {{ contract.role }}<br>
+                        <small>{{ contract.start_date|date:"M d, Y" }} to {{ contract.end_date|date:"M d, Y" }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">No contracts yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+</section>
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone  # ✅ Import timezone
+from django.conf import settings
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)  
@@ -46,3 +47,43 @@ class ContractorOfTheMonth(models.Model):
     def __str__(self):
         return f"{self.name} - {self.company}"
     
+
+from django.db import models
+
+class JobApplication(models.Model):
+    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    applicant = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications')
+    full_name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=50, blank=True, null=True)
+
+    location = models.CharField(max_length=255, blank=True)
+    linkedin = models.URLField(blank=True)
+
+    authorized = models.CharField(max_length=10)
+    sponsorship = models.CharField(max_length=10)
+
+    resume = models.FileField(upload_to='resumes/')
+    cover_letter = models.TextField(max_length=1000, blank=True)
+
+    experience_title = models.CharField(max_length=255, blank=True)
+    experience_company = models.CharField(max_length=255, blank=True)
+    experience_details = models.TextField(blank=True)
+
+    degree = models.CharField(max_length=255, blank=True)
+    school = models.CharField(max_length=255, blank=True)
+    field = models.CharField(max_length=255, blank=True)
+    grad_year = models.PositiveIntegerField(blank=True, null=True)
+
+    availability = models.CharField(max_length=255, blank=True)
+    relocate = models.CharField(max_length=20, blank=True)
+    salary = models.CharField(max_length=100, blank=True)
+    certifications = models.CharField(max_length=255, blank=True)
+
+    consent_emails = models.BooleanField(default=False)
+    confirm_truth = models.BooleanField(default=False)
+
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.full_name} - {self.job.title}"

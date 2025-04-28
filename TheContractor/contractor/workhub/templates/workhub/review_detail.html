@@ -1,13 +1,54 @@
 {% extends "base.html" %}
-{% block title %}Review Detail{% endblock %}
+{% load static %}
+
+{% block title %}Review of {{ review.company }}{% endblock %}
+
 {% block content %}
 <div class="container my-5">
-    <h2>{{ review.reviewer }} - {{ review.company }}</h2>
-    <p><strong>Role:</strong> {{ review.role }}</p>
-    <p><strong>Rating:</strong> ⭐ {{ review.rating }}/5</p>
-    <p><strong>Date:</strong> {{ review.review_date }}</p>
-    <hr>
-    <p>{{ review.review_text }}</p>
-    <a href="{% url 'reviews' %}" class="btn btn-secondary mt-3">Back to Reviews</a>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <img src="{% if review.image %}{{ review.image.url }}{% else %}{% static 'images/default-company.png' %}{% endif %}" 
+                         alt="Company Logo" 
+                         class="rounded-circle me-4" 
+                         style="width: 80px; height: 80px; object-fit: cover;">
+                    <div>
+                        <h2 class="mb-0">{{ review.company }}</h2>
+                        <small class="text-muted">Reviewed by {{ review.reviewer_name }} on {{ review.review_date }}</small>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                    <h5 class="text-primary mb-2">⭐ Rating</h5>
+                    <div class="d-flex align-items-center">
+                        <h4 class="mb-0 me-2">{{ review.rating }}/5</h4>
+                        <div class="text-warning">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    <i class="bi bi-star-fill"></i>
+                                {% else %}
+                                    <i class="bi bi-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                    <h5 class="text-primary mb-2">📝 Review Summary</h5>
+                    <p>{{ review.review_text }}</p>
+                </div>
+
+                <hr>
+
+                <a href="{% url 'reviews' %}" class="btn btn-outline-primary">← Back to All Reviews</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

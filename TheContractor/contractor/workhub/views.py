@@ -11,6 +11,27 @@ from .models import CustomUser, Job, Review, ContractorOfTheMonth
 from .forms import CustomUserCreationForm, EditProfileForm
 
 from django.contrib.auth import logout
+from .forms import JobApplicationForm
+from .models import JobApplication
+
+@login_required
+def apply_for_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if request.method == 'POST':
+        form = JobApplicationForm(request.POST, request.FILES)
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.job = job
+            application.applicant = request.user
+            application.save()
+            messages.success(request, "Your application has been submitted!")
+            return redirect('job_detail', job_id=job.id)
+    else:
+        form = JobApplicationForm()
+
+    return render(request, 'workhub/apply_job.html', {'form': form, 'job': job})
+
 
 
 
@@ -94,6 +115,26 @@ def job_detail(request, job_id):
     job = get_object_or_404(Job, id=job_id)
     return render(request, "workhub/job_detail.html", {"job": job})
 
+@login_required
+def apply_for_job(request, job_id):
+    job = get_object_or_404(Job, pk=job_id)
+
+    if request.method == 'POST':
+        form = JobApplicationForm(request.POST, request.FILES)
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.job = job
+            application.save()
+            messages.success(request, "Your application has been submitted successfully!")
+            return redirect('jobs')
+    else:
+        form = JobApplicationForm()
+
+    return render(request, 'workhub/apply_job.html', {
+        'job': job,
+        'form': form,
+    })
+
 # 🔹 Review Views
 @login_required
 def reviews(request):
@@ -147,3 +188,33 @@ def terms(request):
 
 def bootstrap_template(request):
     return render(request, 'bootstrap_template/index.html')
+
+
+@login_required
+def dashboard(request):
+    # Pull the real applications submitted by the logged-in user
+    applications = JobApplication.objects.filter(applicant=request.user)
+
+    # Pull the real reviews made by the logged-in user
+    reviews = Review.objects.filter(reviewer_name=request.user.username)
+
+    # Pull real contracts awarded to the logged-in user
+    my_contracts = ContractorOfTheMonth.objects.filter(name=request.user.username)
+
+    return render(request, 'workhub/dashboard.html', {
+        'applications': applications,
+        'reviews': reviews,
+        'my_contracts': my_contracts,
+    })
+@login_required
+def upload_documents(request):
+    if request.method == "POST":
+        resume = request.FILES.get('resume')
+        certification = request.FILES.get('certification')
+        other_document = request.FILES.get('other_document')
+        
+        # 🔥 Save these documents to your model or wherever you want!
+        # For now, just a success message would be good.
+        # You would usually save to a UserDocument model
+        
+        return redirect('dashboard')  # Go back to dashboard after uploading

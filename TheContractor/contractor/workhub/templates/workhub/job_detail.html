@@ -12,7 +12,11 @@
         <p><strong>📅 Contract Duration:</strong> {{ job.start_date }} - {{ job.end_date }}</p>
         <p><strong>✅ Skills Required:</strong> {{ job.skills }}</p>
         <p><strong>📜 Job Description:</strong> {{ job.description }}</p>
-        <a href="{% url 'jobs' %}" class="btn btn-secondary">Back to Jobs</a>
-    </div>
+      <div class="d-flex justify-content-between mt-4">
+    <a href="{% url 'jobs' %}" class="btn btn-secondary">← Back to Jobs</a>
+    <a href="{% url 'apply_for_job' job.id %}" class="btn btn-success">Apply for this Job</a>
+</div>
+
+    
 </div>
 {% endblock %}

@@ -31,7 +31,10 @@
                     <p class="card-text">📍 {{ job.location }}</p>
                     <p class="card-text">💰 {{ job.salary }}</p>
                     <p class="card-text">📅 {{ job.start_date }} - {{ job.end_date }}</p>
-                    <button class="btn btn-sm btn-outline-primary mt-auto" data-bs-toggle="collapse" data-bs-target="#details-{{ job.id }}">View Details</button>
+<div class="mt-auto d-flex justify-content-between gap-2">
+    <button class="btn btn-sm btn-outline-primary w-50" data-bs-toggle="collapse" data-bs-target="#details-{{ job.id }}">View Details</button>
+    <a href="{% url 'apply_for_job' job.id %}" class="btn btn-sm btn-success w-50">Apply Now</a>
+</div>
                     <div class="collapse mt-3" id="details-{{ job.id }}">
                         <p><strong>Description:</strong> {{ job.description }}</p>
                         <p><strong>Skills:</strong> {{ job.skills }}</p>
